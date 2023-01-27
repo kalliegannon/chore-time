@@ -1,7 +1,7 @@
 from app import db
-# Name
-# Description
-# Unique Identifier
+# Title /////
+# Description/////
+# Unique Identifier////
 # Date Due
 # Assigned User
 # Group Owner
