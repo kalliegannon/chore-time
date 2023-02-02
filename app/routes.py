@@ -71,3 +71,23 @@ def delete_chore(chore_id):
     db.session.commit()
 
     return make_response(jsonify(f"Chore {chore.chore_id} successfully deleted"))
+
+
+########################### User Routes ##########################
+user_bp = Blueprint('users_bp', __name__, url_prefix='/users')
+# read all users from one group
+@groups_bp.route('/<group_id>/users', methods=['GET'])
+def read_users(group_id):
+    group = validate_models(Group, group_id)
+    users = User.query.all()
+
+    users_response = []
+    for user in users:
+        if user.group_id == group.group_id:
+            users_response.append(
+            {
+            "user_id": user.user_id,
+            "title": user.name
+            }
+        )
+    return jsonify(users_response)
