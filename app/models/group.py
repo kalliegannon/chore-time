@@ -9,3 +9,4 @@ class Group(db.Model):
     name = db.Column(db.String)
     group_id = db.Column(db.integer, primary_key=True, autoincrement=True)
     group_users = db.Column(db.String)
+    user = db.relationship("User", back_populates="groups")
