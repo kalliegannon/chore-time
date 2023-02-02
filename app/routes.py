@@ -187,3 +187,13 @@ def create_group():
     db.session.commit()
 
     return make_response(jsonify(f"Group {new_group.name} successfully created"), 201)
+
+# delete group
+@groups_bp.route('/<group_id>', methods=['DELETE'])
+def delete_group(group_id):
+    group = validate_models(Group, group_id)
+
+    db.session.delete(group)
+    db.session.commit()
+
+    return make_response(jsonify(f"Group {group.name} successfully deleted"))
