@@ -44,6 +44,20 @@ def read_chores(user_id):
         )
     return jsonify(chores_response)
 
+#update chore 
+@chores_bp.route('/<chore_id>', methods=["PUT"])
+def update_chore(chore_id):
+    chore = validate_models(Chore, chore_id)
+
+    request_body = request.get_json()
+
+    chore.title = request_body["title"]
+    chore.description = request_body["description"]
+
+    db.session.commit()
+
+    return make_response(jsonify("Chore has been updated"))
+
 
 # create chore inside user
 @users_bp.route('/<user_id>/chores', methods=['POST'])
@@ -133,6 +147,20 @@ def read_users(group_id):
             }
         )
     return jsonify(users_response)
+
+#update user
+@users_bp.route('/<user_id>', methods=["PUT"])
+def update_user(user_id):
+    user = validate_models(User, user_id)
+
+    request_body = request.get_json()
+
+    user.name = request_body["name"]
+
+    db.session.commit()
+
+    return make_response(jsonify("User has been updated"))
+
 
 
 ############################## GROUP ROUTES ##############################
