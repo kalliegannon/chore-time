@@ -133,3 +133,22 @@ def read_users(group_id):
             }
         )
     return jsonify(users_response)
+
+
+############################## GROUP ROUTES ##############################
+group_bp = Blueprint('groups_bp', __name__, url_prefix='/groups')
+
+# get all groups
+@groups_bp.route('', methods=['GET'])
+def read_groups():
+    groups = Group.query.all()
+
+    groups_response = []
+    for group in groups:
+        groups_response.append(
+        {
+            "group_id": group.group_id,
+            "name": name.title
+        }
+        )
+    return jsonify(groups_response)
