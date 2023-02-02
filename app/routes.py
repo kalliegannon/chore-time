@@ -175,3 +175,15 @@ def update_group(group_id):
     db.session.commit()
 
     return make_response(jsonify("Group has been updated"))
+
+#create group
+@groups_bp.route('', methods=['POST'])
+def create_group():
+    request_body = request.get_json()
+    new_group = Group(
+        name=request_body["name"]
+    )
+    db.session.add(new_group)
+    db.session.commit()
+
+    return make_response(jsonify(f"Group {new_group.name} successfully created"), 201)
