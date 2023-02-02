@@ -43,3 +43,20 @@ def read_chores(user_id):
         }
         )
     return jsonify(chores_response)
+
+
+# create chore inside user
+@users_bp.route('/<user_id>/chores', methods=['POST'])
+def create_chore(user_id):
+    user = validate_models(User, user_id)
+    request_body = request.get_json()
+    new_chore = Chore(
+        title=request_body["title"],
+        description=request_body["description"]
+    )
+
+    user.chores.append(new_chore)
+    db.session.add(new_chore)
+    db.session.commit()
+
+    return make_response(jsonify(f"New Chore {new_chore.title} successfully created"), 201)
