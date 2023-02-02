@@ -60,3 +60,14 @@ def create_chore(user_id):
     db.session.commit()
 
     return make_response(jsonify(f"New Chore {new_chore.title} successfully created"), 201)
+
+
+# DELETE chore
+@chores_bp.route('/<chore_id>', methods=['DELETE'])
+def delete_chore(chore_id):
+    chore = validate_models(Chore, chore_id)
+
+    db.session.delete(chore)
+    db.session.commit()
+
+    return make_response(jsonify(f"Chore {chore.chore_id} successfully deleted"))
