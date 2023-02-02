@@ -162,3 +162,16 @@ def read_one_group(group_id):
         "group_id": group.group_id,
         "name": group.name
     }
+
+#update group name
+@groups_bp.route('/<group_id>', methods=["PUT"])
+def update_group(group_id):
+    group = validate_models(Group, group_id)
+
+    request_body = request.get_json()
+
+    group.name = request_body["name"]
+
+    db.session.commit()
+
+    return make_response(jsonify("Group has been updated"))
