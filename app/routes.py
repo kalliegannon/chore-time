@@ -152,3 +152,13 @@ def read_groups():
         }
         )
     return jsonify(groups_response)
+
+#get one group by group id
+@groups_bp.route('/<group_id>', methods=['GET'])
+def read_one_group(group_id):
+    group = validate_models(Group, group_id)
+
+    return{
+        "group_id": group.group_id,
+        "name": group.name
+    }
