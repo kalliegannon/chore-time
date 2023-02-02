@@ -87,7 +87,22 @@ def read_users(group_id):
             users_response.append(
             {
             "user_id": user.user_id,
-            "title": user.name
+            "name": user.name
             }
         )
     return jsonify(users_response)
+
+# create user inside a group
+@groups_bp.route('/<group_id>/users', methods=['POST'])
+def create_user(group_id):
+    group = validate_models(Group, group_id)
+    request_body = request.get_json()
+    new_user = User(
+        user_name=request_body["name"]
+    )
+
+    group.users.append(new_user)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return make_response(jsonify(f"User message {new_user.user_name} successfully created"), 201)
