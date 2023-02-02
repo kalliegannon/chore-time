@@ -106,3 +106,13 @@ def create_user(group_id):
     db.session.commit()
 
     return make_response(jsonify(f"User message {new_user.user_name} successfully created"), 201)
+
+# DELETE user
+@users_bp.route('/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    user = validate_models(User, user_id)
+
+    db.session.delete(user)
+    db.session.commit()
+
+    return make_response(jsonify(f"User {user.user_id} successfully deleted"))
