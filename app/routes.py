@@ -24,6 +24,9 @@ def read_homepage():
 
 ###########################  Chore Routes  ##############################
 chores_bp = Blueprint('chores_bp', __name__, url_prefix='/chores')
+users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
+groups_bp = Blueprint('groups_bp', __name__, url_prefix='/groups')
+
 
 # read all chores from one user
 
@@ -68,7 +71,7 @@ def create_chore(user_id):
         title=request_body["title"],
         description=request_body["description"]
     )
-
+    #if issue delete line 75
     user.chores.append(new_chore)
     db.session.add(new_chore)
     db.session.commit()
@@ -80,33 +83,31 @@ def create_chore(user_id):
 @chores_bp.route('/<chore_id>', methods=['DELETE'])
 def delete_chore(chore_id):
     chore = validate_models(Chore, chore_id)
-
+    resopnse = jsonify(f"Chore {chore.chore_id} successfully deleted")
     db.session.delete(chore)
     db.session.commit()
 
-    return make_response(jsonify(f"Chore {chore.chore_id} successfully deleted"))
-
+    return make_response(resopnse)
+#check make response in jasonify if issues
 
 ########################### User Routes ##########################
-user_bp = Blueprint('users_bp', __name__, url_prefix='/users')
+# users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
 # read all users from one group
-@groups_bp.route('/<group_id>/users', methods=['GET'])
-def read_users(group_id):
-    group = validate_models(Group, group_id)
-    users = User.query.all()
+# groups_bp = Blueprint('groups_bp', __name__, url_prefix='/groups')
 
-    users_response = []
-    for user in users:
-        if user.group_id == group.group_id:
-            users_response.append(
-            {
-            "user_id": user.user_id,
-            "name": user.name
-            }
-        )
-    return jsonify(users_response)
+#get one user from group
+@groups_bp.route('/<group_id>/user_id', methods=['GET'])
+def read_one_user_from_group(group_id):
+    group = validate_models(Group, group_id)
+    
+
+    return{
+        "user_id": user.user_id,
+        "user_name": user.name
+    }
 
 # create user inside a group
+
 @groups_bp.route('/<group_id>/users', methods=['POST'])
 def create_user(group_id):
     group = validate_models(Group, group_id)
@@ -114,7 +115,7 @@ def create_user(group_id):
     new_user = User(
         user_name=request_body["name"]
     )
-
+########
     group.users.append(new_user)
     db.session.add(new_user)
     db.session.commit()
@@ -125,15 +126,16 @@ def create_user(group_id):
 @users_bp.route('/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
     user = validate_models(User, user_id)
-
+    response = jsonify(f"User {user.user_id} successfully deleted")
     db.session.delete(user)
     db.session.commit()
 
-    return make_response(jsonify(f"User {user.user_id} successfully deleted"))
+    return make_response(response)
 
 # read all users from one group
+
 @groups_bp.route('/<group_id>/users', methods=['GET'])
-def read_users(group_id):
+def read_group_users(group_id):
     group = validate_models(Group, group_id)
     users = User.query.all()
 
@@ -164,7 +166,7 @@ def update_user(user_id):
 
 
 ############################## GROUP ROUTES ##############################
-group_bp = Blueprint('groups_bp', __name__, url_prefix='/groups')
+# groups_bp = Blueprint('groups_bp', __name__, url_prefix='/groups')
 
 # get all groups
 @groups_bp.route('', methods=['GET'])
@@ -176,7 +178,7 @@ def read_groups():
         groups_response.append(
         {
             "group_id": group.group_id,
-            "name": name.title
+            "name": group.name
         }
         )
     return jsonify(groups_response)
@@ -220,8 +222,8 @@ def create_group():
 @groups_bp.route('/<group_id>', methods=['DELETE'])
 def delete_group(group_id):
     group = validate_models(Group, group_id)
-
+    response = jsonify(f"Group {group.name} successfully deleted")
     db.session.delete(group)
     db.session.commit()
 
-    return make_response(jsonify(f"Group {group.name} successfully deleted"))
+    return make_response(response)
