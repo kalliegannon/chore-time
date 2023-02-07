@@ -15,7 +15,8 @@ def create_app(test_config=None):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     if test_config is None:
-        app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql+psycopg2://postgres:postgres@localhost:5432/chore_time_development'  
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+            "SQLALCHEMY_DATABASE_URI")
     else:
         app.config["TESTING"] = True
         app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
@@ -23,8 +24,8 @@ def create_app(test_config=None):
 
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
-    from app.models.user import User
-    from app.models.group import Group
+    from app.models.member import Member
+    from app.models.household import Household
     from app.models.chore import Chore
 
     db.init_app(app)

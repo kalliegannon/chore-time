@@ -5,6 +5,6 @@ class Chore(db.Model):
     chore_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String)
     description = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
-    user = db.relationship("User", back_populates="chores")
+    member_id = db.Column(db.Integer, db.ForeignKey("member.member_id"))
+    member = db.relationship("Member", back_populates="chores")
 
