@@ -47,16 +47,16 @@ members_bp = Blueprint('members_bp', __name__, url_prefix='/members')
 household_bp = Blueprint('household_bp', __name__, url_prefix='/household')
 
 
-# # read all chores from one user
+# # read all chores from one member
 
-@chores_bp.route('', methods=['GET'])
-def read_chores():
-    # user = validate_models(User, user_id)
+@chores_bp.route('<member_id>', methods=['GET'])
+def read_chores(member_id):
+    member = validate_models(Member, member_id)
     chores = Chore.query.all()
 
     chores_response = []
     for chore in chores:
-        # if chore.user_id == user.user_id:
+        # if chore.member_id == member.member_id:
             chores_response.append(
         {
             # "chore_id": chore.chore_id,
@@ -98,21 +98,7 @@ def create_chore(member_id):
 
     return make_response(jsonify(f"New Chore {new_chore.title} successfully created"), 201)
 
-######
-# @members_bp.route('/<household_id>/members', methods=['POST'])
-# def create_member(household_id):
-#     household = validate_models(Household, household_id)
-#     request_body = request.get_json()
-#     new_member = Member(
-#         member_name=request_body["member_name"]
-#     )
 
-#     household.members.append(new_member)
-#     db.session.add(new_member)
-#     db.session.commit()
-
-
-#####
 
 # # DELETE chore
 # @chores_bp.route('/<chore_id>', methods=['DELETE'])
