@@ -126,21 +126,21 @@ def create_chore():
 #         "user_name": user.name
 #     }
 
-# create user inside a group
+# create member inside a household
 
-# @groups_bp.route('/<household_id>/members', methods=['POST'])
-# def create_user(group_id):
-#     group = validate_models(Group, group_id)
-#     request_body = request.get_json()
-#     new_user = User(
-#         user_name=request_body["name"]
-#     )
-# ########
-#     group.users.append(new_user)
-#     db.session.add(new_user)
-#     db.session.commit()
+@members_bp.route('/<household_id>/members', methods=['POST'])
+def create_member(household_id):
+    household = validate_models(Household, household_id)
+    request_body = request.get_json()
+    new_member = Member(
+        member_name=request_body["member_name"]
+    )
 
-#     return make_response(jsonify(f"User message {new_user.user_name} successfully created"), 201)
+    household.members.append(new_member)
+    db.session.add(new_member)
+    db.session.commit()
+
+    return make_response(jsonify(f"Member message {new_member.member_name} successfully created"), 201)
 
 # # DELETE user
 # @users_bp.route('/<user_id>', methods=['DELETE'])
@@ -152,23 +152,23 @@ def create_chore():
 
 #     return make_response(response)
 
-# # read all users from one group
+# read all users from one group
 
-# @groups_bp.route('/<group_id>/users', methods=['GET'])
-# def read_group_users(group_id):
-#     group = validate_models(Group, group_id)
-#     users = User.query.all()
+@members_bp.route('/<household_id>/members', methods=['GET'])
+def read_household_members(household_id):
+    household = validate_models(Household, household_id)
+    members = Member.query.all()
 
-#     users_response = []
-#     for user in users:
-#         if user.group_id == group.group_id:
-#             users_response.append(
-#             {
-#             "user_id": user.user_id,
-#             "name": user.name
-#             }
-#         )
-#     return jsonify(users_response)
+    members_response = []
+    for member in members:
+        if member.household_id == household.household_id:
+            members_response.append(
+            {
+            "member_id": member.member_id,
+            "member_name": member.member_name
+            }
+        )
+    return jsonify(members_response)
 
 # #update user
 # @users_bp.route('/<user_id>', methods=["PUT"])
