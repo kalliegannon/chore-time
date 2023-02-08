@@ -100,16 +100,16 @@ def create_chore(member_id):
 
 
 
-# # DELETE chore
-# @chores_bp.route('/<chore_id>', methods=['DELETE'])
-# def delete_chore(chore_id):
-#     chore = validate_models(Chore, chore_id)
-#     resopnse = jsonify(f"Chore {chore.chore_id} successfully deleted")
-#     db.session.delete(chore)
-#     db.session.commit()
+# DELETE chore
+@chores_bp.route('/<chore_id>', methods=['DELETE'])
+def delete_chore(chore_id):
+    chore = validate_models(Chore, chore_id)
+    resopnse = jsonify(f"Chore {chore.chore_id} successfully deleted")
+    db.session.delete(chore)
+    db.session.commit()
 
-#     return make_response(resopnse)
-# #check make response in jasonify if issues
+    return make_response(resopnse)
+#check make response in jasonify if issues
 
 # ########################### User Routes ##########################
 # users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
