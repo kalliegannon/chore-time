@@ -142,17 +142,17 @@ def create_member(household_id):
 
     return make_response(jsonify(f"Member message {new_member.member_name} successfully created"), 201)
 
-# # DELETE user
-# @users_bp.route('/<user_id>', methods=['DELETE'])
-# def delete_user(user_id):
-#     user = validate_models(User, user_id)
-#     response = jsonify(f"User {user.user_id} successfully deleted")
-#     db.session.delete(user)
-#     db.session.commit()
+# DELETE member
+@members_bp.route('/<member_id>', methods=['DELETE'])
+def delete_member(member_id):
+    member = validate_models(Member, member_id)
+    response = jsonify(f"member {member.member_id} successfully deleted")
+    db.session.delete(member)
+    db.session.commit()
 
-#     return make_response(response)
+    return make_response(response)
 
-# read all users from one group
+# read all member from one group
 
 @members_bp.route('/<household_id>/members', methods=['GET'])
 def read_household_members(household_id):
