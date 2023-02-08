@@ -67,19 +67,19 @@ def read_chores(member_id):
     print(chores_response)
     return jsonify(chores_response)
 
-#update chore 
-# @chores_bp.route('/<chore_id>', methods=["PUT"])
-# def update_chore(chore_id):
-#     # chore = validate_models(Chore, chore_id)
+# update chore 
+@chores_bp.route('/<chore_id>', methods=["PUT"])
+def update_chore(chore_id):
+    chore = validate_models(Chore, chore_id)
 
-#     request_body = request.get_json()
+    request_body = request.get_json()
 
-#     chore.title = request_body["title"]
-#     chore.description = request_body["description"]
+    chore.title = request_body["title"]
+    chore.description = request_body["description"]
 
-#     db.session.commit()
+    db.session.commit()
 
-#     return make_response(jsonify("Chore has been updated"))
+    return make_response(jsonify("Chore has been updated"))
 
 
 # create chore inside member
