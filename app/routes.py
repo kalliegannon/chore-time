@@ -170,18 +170,18 @@ def read_household_members(household_id):
         )
     return jsonify(members_response)
 
-# #update user
-# @users_bp.route('/<user_id>', methods=["PUT"])
-# def update_user(user_id):
-#     user = validate_models(User, user_id)
+#update member
+@members_bp.route('/<member_id>', methods=["PUT"])
+def update_member(member_id):
+    member = validate_models(Member, member_id)
 
-#     request_body = request.get_json()
+    request_body = request.get_json()
 
-#     user.name = request_body["name"]
+    member.member_name = request_body["member_name"]
 
-#     db.session.commit()
+    db.session.commit()
 
-#     return make_response(jsonify("User has been updated"))
+    return make_response(jsonify("member has been updated"))
 
 
 
