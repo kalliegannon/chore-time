@@ -35,11 +35,11 @@ def create_app(test_config=None):
     from .routes import chores_bp
     app.register_blueprint(chores_bp)
 
-    from .routes import groups_bp
-    app.register_blueprint(groups_bp)
+    from .routes import households_bp
+    app.register_blueprint(households_bp)
 
-    from .routes import users_bp
-    app.register_blueprint(users_bp)
+    from .routes import members_bp
+    app.register_blueprint(members_bp)
 
     CORS(app)
     return app

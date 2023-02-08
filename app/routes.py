@@ -4,6 +4,24 @@ from app.models.member import Member
 from app.models.household import Household
 from app.models.chore import Chore
 
+def validate_models(cls, model_id):
+    try:
+        model_id = int(model_id)
+    except:
+        abort(make_response({"message":f"{cls.__name__} {model_id} invalid"}, 400))
+
+    model = cls.query.get(model_id)
+
+    if not model:
+        abort(make_response({"message":f"{cls.__name__} {model_id} not found"}, 404))
+    return model
+
+homepage_bp = Blueprint('homepage_bp', __name__)
+
+@homepage_bp.route('/', methods=['GET'])
+def read_homepage():
+    return 'Welcome to our homepage!'
+
 
 # def validate_models(model_id):
 #     try:
@@ -23,13 +41,13 @@ from app.models.chore import Chore
 # def read_homepage():
 #     return 'Welcome to our homepage!'
 
-###########################  Chore Routes  ##############################
+# ###########################  Chore Routes  ##############################
 chores_bp = Blueprint('chores', __name__, url_prefix='/chores')
-users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
-groups_bp = Blueprint('groups_bp', __name__, url_prefix='/groups')
+members_bp = Blueprint('members_bp', __name__, url_prefix='/members')
+household_bp = Blueprint('household_bp', __name__, url_prefix='/household')
 
 
-# read all chores from one user
+# # read all chores from one user
 
 @chores_bp.route('', methods=['GET'])
 def read_chores():
@@ -49,10 +67,10 @@ def read_chores():
     print(chores_response)
     return jsonify(chores_response)
 
-# #update chore 
+#update chore 
 # @chores_bp.route('/<chore_id>', methods=["PUT"])
 # def update_chore(chore_id):
-#     chore = validate_models(Chore, chore_id)
+#     # chore = validate_models(Chore, chore_id)
 
 #     request_body = request.get_json()
 
@@ -64,8 +82,8 @@ def read_chores():
 #     return make_response(jsonify("Chore has been updated"))
 
 
-# # create chore inside user
-@chores_bp.route('<user_id>/chores', methods=['POST'])
+# create chore inside user
+@chores_bp.route('', methods=['POST'])
 def create_chore():
     # user = validate_models(User, user_id)
     request_body = request.get_json()
@@ -74,7 +92,6 @@ def create_chore():
         title=request_body["title"],
         description=request_body["description"]
     )
-    #if issue delete line 75
     # user.chores.append(new_chore)
     db.session.add(new_chore)
     db.session.commit()
@@ -109,9 +126,9 @@ def create_chore():
 #         "user_name": user.name
 #     }
 
-# # create user inside a group
+# create user inside a group
 
-# @groups_bp.route('/<group_id>/users', methods=['POST'])
+# @groups_bp.route('/<household_id>/members', methods=['POST'])
 # def create_user(group_id):
 #     group = validate_models(Group, group_id)
 #     request_body = request.get_json()
@@ -169,64 +186,64 @@ def create_chore():
 
 
 # ############################## GROUP ROUTES ##############################
-# # groups_bp = Blueprint('groups_bp', __name__, url_prefix='/groups')
+households_bp = Blueprint('household_bp', __name__, url_prefix='/household')
 
-# # get all groups
-# @groups_bp.route('', methods=['GET'])
-# def read_groups():
-#     groups = Group.query.all()
+# get all groups
+@households_bp.route('', methods=['GET'])
+def read_households():
+    households = Household.query.all()
 
-#     groups_response = []
-#     for group in groups:
-#         groups_response.append(
-#         {
-#             "group_id": group.group_id,
-#             "name": group.name
-#         }
-#         )
-#     return jsonify(groups_response)
+    households_response = []
+    for household in households:
+        households_response.append(
+        {
+            "household_id": household.household_id,
+            "name": household.name
+        }
+        )
+    return jsonify(households_response)
 
-# #get one group by group id
-# @groups_bp.route('/<group_id>', methods=['GET'])
-# def read_one_group(group_id):
-#     group = validate_models(Group, group_id)
+#get one household by household id
+@households_bp.route('/<household_id>', methods=['GET'])
+def read_one_household(household_id):
+    household = validate_models(Household, household_id)
 
-#     return{
-#         "group_id": group.group_id,
-#         "name": group.name
-#     }
+    return{
+        "household_id": household.household_id,
+        "name": household.name
+    }
 
-# #update group name
-# @groups_bp.route('/<group_id>', methods=["PUT"])
-# def update_group(group_id):
-#     group = validate_models(Group, group_id)
+#update household name
+@households_bp.route('/<household_id>', methods=["PUT"])
+def update_household(household_id):
+    household = validate_models(Household, household_id)
 
-#     request_body = request.get_json()
+    request_body = request.get_json()
 
-#     group.name = request_body["name"]
+    household.name = request_body["name"]
 
-#     db.session.commit()
+    db.session.commit()
 
-#     return make_response(jsonify("Group has been updated"))
+    return make_response(jsonify("household has been updated"))
 
-# #create group
-# @groups_bp.route('', methods=['POST'])
-# def create_group():
-#     request_body = request.get_json()
-#     new_group = Group(
-#         name=request_body["name"]
-#     )
-#     db.session.add(new_group)
-#     db.session.commit()
+#create group
+@households_bp.route('', methods=['POST'])
+def create_household():
+    request_body = request.get_json()
+    new_household = Household(
+        name=request_body["name"]
+    )
+    db.session.add(new_household)
+    db.session.commit()
 
-#     return make_response(jsonify(f"Group {new_group.name} successfully created"), 201)
+    return make_response(jsonify(f"household {new_household.name} successfully created"), 201)
 
-# # delete group
-# @groups_bp.route('/<group_id>', methods=['DELETE'])
-# def delete_group(group_id):
-#     group = validate_models(Group, group_id)
-#     response = jsonify(f"Group {group.name} successfully deleted")
-#     db.session.delete(group)
-#     db.session.commit()
+# delete group
+@households_bp.route('/<household_id>', methods=['DELETE'])
+def delete_household(household_id):
+    household = validate_models(Household, household_id)
+    response = jsonify(f"household {household.name} successfully deleted")
+    db.session.delete(household)
+    db.session.commit()
 
-#     return make_response(response)
+    return make_response(response)
