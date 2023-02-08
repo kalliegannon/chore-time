@@ -59,7 +59,7 @@ def read_chores(member_id):
         # if chore.member_id == member.member_id:
             chores_response.append(
         {
-            # "chore_id": chore.chore_id,
+            "chore_id": chore.chore_id,
             "title": chore.title,
             "description": chore.description
         }
