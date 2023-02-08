@@ -82,13 +82,13 @@ def read_chores():
 #     return make_response(jsonify("Chore has been updated"))
 
 
-# create chore inside user
-@chores_bp.route('', methods=['POST'])
-def create_chore():
-    # user = validate_models(User, user_id)
+# create chore inside member
+@chores_bp.route('/<member_id>/chores', methods=['POST'])
+def create_chore(member_id):
+    member = validate_models(Member, member_id)
     request_body = request.get_json()
     new_chore = Chore(
-        chore_id = request_body["chore_id"],
+        # chore_id=request_body["chore_id"],
         title=request_body["title"],
         description=request_body["description"]
     )
@@ -98,6 +98,21 @@ def create_chore():
 
     return make_response(jsonify(f"New Chore {new_chore.title} successfully created"), 201)
 
+######
+# @members_bp.route('/<household_id>/members', methods=['POST'])
+# def create_member(household_id):
+#     household = validate_models(Household, household_id)
+#     request_body = request.get_json()
+#     new_member = Member(
+#         member_name=request_body["member_name"]
+#     )
+
+#     household.members.append(new_member)
+#     db.session.add(new_member)
+#     db.session.commit()
+
+
+#####
 
 # # DELETE chore
 # @chores_bp.route('/<chore_id>', methods=['DELETE'])
@@ -111,20 +126,20 @@ def create_chore():
 # #check make response in jasonify if issues
 
 # ########################### User Routes ##########################
-# # users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
-# # read all users from one group
-# # groups_bp = Blueprint('groups_bp', __name__, url_prefix='/groups')
+# users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
+# read all users from one group
+# groups_bp = Blueprint('groups_bp', __name__, url_prefix='/groups')
 
-# #get one user from group
-# @groups_bp.route('/<group_id>/user_id', methods=['GET'])
-# def read_one_user_from_group(group_id):
-#     group = validate_models(Group, group_id)
+#get one user from group
+@members_bp.route('/<household_id>/<member_id>', methods=['GET'])
+def read_one_member_from_household(member_id,household_id):
+    member = validate_models(Member, member_id)
     
 
-#     return{
-#         "user_id": user.user_id,
-#         "user_name": user.name
-#     }
+    return{
+        "member_id": member.member_id,
+        "member_name": member.member_name
+    }
 
 # create member inside a household
 
@@ -152,7 +167,7 @@ def delete_member(member_id):
 
     return make_response(response)
 
-# read all member from one group
+# read all member from one household
 
 @members_bp.route('/<household_id>/members', methods=['GET'])
 def read_household_members(household_id):
