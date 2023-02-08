@@ -188,7 +188,7 @@ def create_chore():
 # ############################## GROUP ROUTES ##############################
 households_bp = Blueprint('household_bp', __name__, url_prefix='/household')
 
-# get all groups
+# get all household
 @households_bp.route('', methods=['GET'])
 def read_households():
     households = Household.query.all()
@@ -226,7 +226,7 @@ def update_household(household_id):
 
     return make_response(jsonify("household has been updated"))
 
-#create group
+#create household
 @households_bp.route('', methods=['POST'])
 def create_household():
     request_body = request.get_json()
@@ -238,7 +238,7 @@ def create_household():
 
     return make_response(jsonify(f"household {new_household.name} successfully created"), 201)
 
-# delete group
+# delete household
 @households_bp.route('/<household_id>', methods=['DELETE'])
 def delete_household(household_id):
     household = validate_models(Household, household_id)
